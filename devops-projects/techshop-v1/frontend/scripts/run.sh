@@ -2,7 +2,7 @@
 
 # Переменные
 IMAGE_NAME="techshop"
-TAG="v1"
+TAG="v1.0"
 CONTAINER_NAME="techshop-container"
 HOST_PORT=8081
 CONTAINER_PORT=80
