@@ -1,0 +1,57 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./frontend/Dockerfile
+    container_name: techshop-frontend
+    ports:
+      - "8081:80"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - techshop-network
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
+    container_name: techshop-backend
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - psostgres
+    restart: always
+    networks:
+      - techshop-network
+
+  psostgres:
+    image: postgres:16-alpine
+    container_name: techshop-postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sergey -d techshop"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - techshop-network
+
+networks:
+  techshop-network:
+    driver: bridge
+  
+volumes:
+  postgres-data:
