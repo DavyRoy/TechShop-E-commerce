@@ -2,12 +2,10 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: Dockerfile
     container_name: techshop-frontend
     ports:
       - "8081:80"
-    volumes:
-      - ./frontend:/app
     depends_on:
       - backend
     restart: always
@@ -16,21 +14,19 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: ./backend/Dockerfile
+      dockerfile: Dockerfile
     container_name: techshop-backend
     env_file:
       - .env
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend:/app
     depends_on:
-      - psostgres
+      - postgres
     restart: always
     networks:
       - techshop-network
 
-  psostgres:
+  postgres:
     image: postgres:16-alpine
     container_name: techshop-postgres
     healthcheck:
