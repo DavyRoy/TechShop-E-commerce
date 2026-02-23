@@ -12,6 +12,14 @@ class Category(db.Model):
 
     def __repr__(self):
         return f'<Category {self.name}>'
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
     
 class Product(db.Model):
     __tablename__ = 'products'
@@ -29,6 +37,18 @@ class Product(db.Model):
 
     def __repr__(self):
         return f'<Product {self.name}>'
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'price': float(self.price),
+            'stock': self.stock,
+            'category_id': self.category_id,
+            'url_image': self.url_image,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
     
 class Order(db.Model):
     __tablename__ = 'orders'
@@ -44,6 +64,16 @@ class Order(db.Model):
 
     def __repr__(self):
         return f'<Order {self.id}>'
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_name': self.user_name,
+            'user_email': self.user_email,
+            'total_price': float(self.total_price),
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
     
 class OrderItem(db.Model):
     __tablename__ = 'order_items'
@@ -57,4 +87,14 @@ class OrderItem(db.Model):
 
     def __repr__(self):
         return f'<OrderItem {self.id}>'
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'order_id': self.order_id,
+            'product_id': self.product_id,
+            'quantity': self.quantity,
+            'price': float(self.price),
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
     
