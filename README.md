@@ -36,6 +36,6 @@ Rapidly advance from beginner to Senior DevOps Engineer through intensive, proje
 
 # TechShop E-commerce Platform
 
-![CI/CD](https://github.com/DavyRoy/TechShop-E-commerce/actions/workflows/ci.yml/badge.svg)
+![CI/CD](https://github.com/DavyRoy/TechShop-E-commerce/actions/workflows/main.yml/badge.svg)
 
 DevOps Learning Project - Level 2
