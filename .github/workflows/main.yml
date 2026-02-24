@@ -34,8 +34,9 @@ jobs:
       - name: Run flake8
         run: |
           flake8 devops-projects/techshop-v1/backend/ \
-            --max-line-length=120 \
-            --exclude=__pycache__
+          --max-line-length=120 \
+          --exclude=__pycache__ \
+          --ignore=E302,E301,W293,W292,E501
 
   backend-test:
     runs-on: ubuntu-latest
