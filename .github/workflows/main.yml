@@ -26,7 +26,7 @@ jobs:
 
       - name: Run flake8
         run: |
-          flake8 backend/ --max-line-length=120 --exclude=__pycache__
+          flake8 devops-practices/techshop-v1/backend/ --max-line-length=120 --exclude=__pycache__
 
   build-images:
     runs-on: ubuntu-latest
