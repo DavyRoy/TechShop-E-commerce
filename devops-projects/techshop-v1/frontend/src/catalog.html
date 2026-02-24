@@ -8,66 +8,43 @@
 </head>
 <body>
     <header>
-        <h1>🛒 TechShop</h1>
-        <p>Your trusted electronics store</p>
+        <div class="header-content">
+            <h1>🛒 TechShop</h1>
+            <p>Your trusted electronics store</p>
+            <div class="cart-icon">
+                🛒 Cart (<span id="cart-count">0</span>)
+            </div>
+        </div>
     </header>
     
     <nav>
         <a href="index.html">Home</a>
         <a href="catalog.html">Catalog</a>
         <a href="about.html">About Us</a>
+        <a href="order.html">Checkout</a>
     </nav>
     
-    <main>
-        <h2>Our Products</h2>
-        
-        <div class="product-grid">
-            <div class="product-card">
-                <h3>💻 Laptop Pro X1</h3>
-                <p class="price">$1,299</p>
-                <p>High-performance laptop for professionals</p>
-                <button>Add to Cart</button>
+    <main class="catalog-page">
+        <aside class="sidebar">
+            <h3>Categories</h3>
+            <ul id="categories-list">
+                <li><a href="#" onclick="loadCatalogProducts(); return false;">All Products</a></li>
+            </ul>
+        </aside>
+
+        <section class="catalog-main">
+            <h2>Product Catalog</h2>
+            <div id="catalog-products" class="products-grid">
+                <!-- Products will be loaded here -->
             </div>
-            
-            <div class="product-card">
-                <h3>📱 Smartphone Z5</h3>
-                <p class="price">$899</p>
-                <p>Latest flagship with amazing camera</p>
-                <button>Add to Cart</button>
-            </div>
-            
-            <div class="product-card">
-                <h3>🎧 Wireless Headphones</h3>
-                <p class="price">$249</p>
-                <p>Premium sound quality and comfort</p>
-                <button>Add to Cart</button>
-            </div>
-            
-            <div class="product-card">
-                <h3>⌚ Smart Watch Series 6</h3>
-                <p class="price">$399</p>
-                <p>Track your fitness and health</p>
-                <button>Add to Cart</button>
-            </div>
-            
-            <div class="product-card">
-                <h3>📷 Digital Camera Pro</h3>
-                <p class="price">$1,799</p>
-                <p>Professional photography equipment</p>
-                <button>Add to Cart</button>
-            </div>
-            
-            <div class="product-card">
-                <h3>🖨️ Wireless Printer</h3>
-                <p class="price">$199</p>
-                <p>Fast and reliable printing solution</p>
-                <button>Add to Cart</button>
-            </div>
-        </div>
+        </section>
     </main>
     
     <footer>
-        <p>&copy; 2026 TechShop. DevOps Learning Project - Level 1</p>
+        <p>&copy; 2026 TechShop. DevOps Learning Project - Level 2</p>
     </footer>
+
+    <script src="api.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

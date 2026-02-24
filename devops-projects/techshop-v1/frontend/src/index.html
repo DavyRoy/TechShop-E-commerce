@@ -8,14 +8,20 @@
 </head>
 <body>
     <header>
-        <h1>🛒 TechShop</h1>
-        <p>Your trusted electronics store</p>
+        <div class="header-content">
+            <h1>🛒 TechShop</h1>
+            <p>Your trusted electronics store</p>
+            <div class="cart-icon">
+                🛒 Cart (<span id="cart-count">0</span>)
+            </div>
+        </div>
     </header>
     
     <nav>
         <a href="index.html">Home</a>
         <a href="catalog.html">Catalog</a>
         <a href="about.html">About Us</a>
+        <a href="order.html">Checkout</a>
     </nav>
     
     <main>
@@ -38,10 +44,20 @@
                 <p>Same-day delivery available</p>
             </div>
         </section>
+
+        <section class="products-section">
+            <h2>Featured Products</h2>
+            <div id="featured-products" class="products-grid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </section>
     </main>
     
     <footer>
-        <p>&copy; 2026 TechShop. DevOps Learning Project - Level 1</p>
+        <p>&copy; 2026 TechShop. DevOps Learning Project - Level 2</p>
     </footer>
+
+    <script src="api.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
