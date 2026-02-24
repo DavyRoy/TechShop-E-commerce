@@ -55,7 +55,7 @@ jobs:
 
       - name: Validate docker-compose.yml
         run: |
-            docker-compose config
+            docker compose config
 
       - name: Create test .env
         run: |
