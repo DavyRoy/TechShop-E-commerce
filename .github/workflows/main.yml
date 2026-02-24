@@ -121,7 +121,9 @@ jobs:
           docker compose version
 
       - name: Validate docker-compose.yml
-        run: docker compose config
+        run: |
+          cd devops-projects/techshop-v1
+          docker compose config
 
   build-images:
     runs-on: ubuntu-latest
