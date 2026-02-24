@@ -26,7 +26,7 @@ jobs:
 
       - name: Run flake8
         run: |
-          flake8 devops-practices/techshop-v1/backend/ --max-line-length=120 --exclude=__pycache__
+          flake8 devops-projects/techshop-v1/backend/ --max-line-length=120 --exclude=__pycache__
 
   build-images:
     runs-on: ubuntu-latest
@@ -40,11 +40,11 @@ jobs:
 
       - name: Build Frontend Docker image
         run: |
-          docker build -t techshop-frontend:ci ./frontend
+          docker build -t techshop-frontend:ci devops-projects/techshop-v1/frontend
 
       - name: Build Backend Docker image
         run: |
-          docker build -t techshop-backend:ci ./backend
+          docker build -t techshop-backend:ci devops-projects/techshop-v1/backend
 
   validate-compose:
     runs-on: ubuntu-latest
@@ -90,10 +90,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r backend/requirements.txt
+          pip install -r devops-projects/techshop-v1/backend/requirements.txt
           pip install pytest pytest-cov
 
       - name: Run tests
         run: |
-          cd backend
+          cd devops-projects/techshop-v1/backend
           pytest test/ -v
