@@ -45,9 +45,36 @@ services:
     networks:
       - techshop-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: techshop-prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: always
+    networks:
+      - techshop-network
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: techshop-node-exporter
+    ports:
+      - "9100:9100"
+    restart: always
+    networks:
+      - techshop-network
+
 networks:
   techshop-network:
     driver: bridge
   
 volumes:
   postgres-data:
+  prometheus-data:
