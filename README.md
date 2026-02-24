@@ -33,3 +33,9 @@ Rapidly advance from beginner to Senior DevOps Engineer through intensive, proje
 
 **Learning Program:** February 2026 - Present  
 **Progress Tracking:** See individual project directories
+
+# TechShop E-commerce Platform
+
+![CI/CD](https://github.com/DavyRoy/TechShop-E-commerce/actions/workflows/ci.yml/badge.svg)
+
+DevOps Learning Project - Level 2
