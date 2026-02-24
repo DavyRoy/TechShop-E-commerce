@@ -96,7 +96,7 @@ jobs:
       - name: Run tests
         run: |
           cd devops-projects/techshop-v1/backend
-          pytest test/ -v --maxfail=1 --disable-warnings
+          pytest -v --maxfail=1 --disable-warnings
 
   validate-compose:
     runs-on: ubuntu-latest
