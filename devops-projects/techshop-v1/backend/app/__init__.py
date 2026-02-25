@@ -11,11 +11,13 @@ def create_app():
     CORS(app)
     app.config.from_object(Config)
     db.init_app(app)
+    
     with app.app_context():
         db.create_all()
+    
     from app.routes import api
     app.register_blueprint(api)
-
-   PrometheusMetrics(app)
-
+    
+    PrometheusMetrics(app)
+    
     return app
