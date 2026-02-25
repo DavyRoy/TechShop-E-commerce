@@ -1,25 +1,24 @@
 import pytest
 import os
+
+# ✅ КРИТИЧНО: Установить переменные ПЕРЕД импортом app!
+os.environ['TESTING'] = 'True'
+os.environ['POSTGRES_USER'] = 'test'
+os.environ['POSTGRES_PASSWORD'] = 'test'
+os.environ['POSTGRES_HOST'] = 'localhost'
+os.environ['POSTGRES_PORT'] = '5432'
+os.environ['POSTGRES_DB'] = 'testdb'
+os.environ['SECRET_KEY'] = 'test-secret-key'
+
+# Теперь можно импортировать - config.py увидит правильные переменные
 from app import create_app, db as _db
 from app.models import Category, Product
 
 @pytest.fixture(scope='session')
 def app():
     """Создаёт Flask приложение для тестов"""
-    # Установить переменные окружения
-    os.environ['TESTING'] = 'True'
-    os.environ['POSTGRES_USER'] = 'test'
-    os.environ['POSTGRES_PASSWORD'] = 'test'
-    os.environ['POSTGRES_HOST'] = 'localhost'
-    os.environ['POSTGRES_PORT'] = '5432'  # ✅ Исправлено с 5433 на 5432
-    os.environ['POSTGRES_DB'] = 'testdb'
-    os.environ['SECRET_KEY'] = 'test-secret-key'
-    
     app = create_app()
     app.config['TESTING'] = True
-    
-    # ✅ ВАЖНО: Переопределить DATABASE_URI напрямую для тестов
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test:test@localhost:5432/testdb'
     
     return app
 
