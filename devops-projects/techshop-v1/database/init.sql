@@ -56,4 +56,4 @@ INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
 (5, 9, 1, 299.99),
 (5, 10, 1, 599.99),
 (5, 11, 1, 99.99),
-(5, 12, 1, 1499.99);
+(5, 12, 1, 1499.99),
