@@ -16,6 +16,6 @@ def create_app():
     from app.routes import api
     app.register_blueprint(api)
 
-    metrics = PrometheusMetrics()
+    metrics = PrometheusMetrics(app)
 
     return app
