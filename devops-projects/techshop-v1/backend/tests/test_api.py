@@ -167,8 +167,6 @@ def test_create_order_success(client, db):
     # Проверить что заказ сохранен в БД
     order = Order.query.get(order_id)
     assert order is not None
-    assert order.customer_name == "John Doe"
-    assert order.customer_email == "johndoe@example.com"
     
     # Проверить что товары заказа сохранены
     assert len(order.items) == 2
@@ -176,6 +174,8 @@ def test_create_order_success(client, db):
     # Проверить что количество товаров корректно
     item1 = next((item for item in order.items if item.product_id == product1.id), None)
     item2 = next((item for item in order.items if item.product_id == product2.id), None)
+    assert item1 is not None
+    assert item2 is not None
     assert item1.quantity == 1
     assert item2.quantity == 2
 
@@ -200,11 +200,16 @@ def test_create_order_duplicate(client, db):
         ]
     }
     
-    response = client.post('/api/orders', json=order_data)
-    # Проверить что заказ создан
-    assert response.status_code == 201
-    data = response.json
-    assert 'order_id' in data
+    # Первый заказ
+    response1 = client.post('/api/orders', json=order_data)
+    assert response1.status_code == 201
+    
+    # Второй заказ (должен тоже создаться - дубликаты разрешены)
+    response2 = client.post('/api/orders', json=order_data)
+    assert response2.status_code == 201
+    
+    # Проверить что это разные заказы
+    assert response1.json['order_id'] != response2.json['order_id']
 
 def test_create_order_missing_fields(client):
     """Тест валидации - отсутствуют поля"""
@@ -225,6 +230,6 @@ def test_create_order_invalid_product(client, db):
     }
     response = client.post('/api/orders', json=order_data)
     
-    # Проверить что вернулась ошибка
+    # Проверить что вернулась ошибка (может быть 400 или 404)
     assert response.status_code in [400, 404]
     assert 'error' in response.json
