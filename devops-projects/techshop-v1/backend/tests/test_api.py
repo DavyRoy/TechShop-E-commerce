@@ -93,7 +93,7 @@ def test_get_product_by_id_success(client, db):
     assert data['price'] == 10.0
     assert data['id'] == product.id
 
-def test_get_product_by_id_not_found(client):
+def test_get_product_by_id_not_found(client, db):
     """Тест 404 для несуществующего товара"""
     response = client.get('/api/products/999')
     
