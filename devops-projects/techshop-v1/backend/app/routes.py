@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.models import Product, Category, Order, OrderItem
 from app import db
-from app import math
+import math
 
 # Blueprint
 api = Blueprint('api', __name__, url_prefix='/api')
