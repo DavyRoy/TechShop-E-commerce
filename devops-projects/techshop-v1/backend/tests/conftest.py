@@ -1,7 +1,7 @@
 import pytest
 import os
 
-# ✅ КРИТИЧНО: Установить переменные ПЕРЕД импортом app!
+
 os.environ['TESTING'] = 'True'
 os.environ['POSTGRES_USER'] = 'test'
 os.environ['POSTGRES_PASSWORD'] = 'test'
