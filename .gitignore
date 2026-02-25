@@ -31,3 +31,8 @@ coverage.xml
 .dockerignore
 .env
 *.env
+htmlcov/
+.coverage
+backend/.pytest_cache/
+backend/htmlcov/
+backend/.coverage
