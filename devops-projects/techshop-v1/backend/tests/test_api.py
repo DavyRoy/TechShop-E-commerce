@@ -34,27 +34,6 @@ def test_get_products_with_data(client, db):
     assert data['total'] == 1
     assert data['products'][0]['name'] == 'Laptop' 
 
-def test_get_products_pagination_simple(client, db):
-    """Тест pagination для товаров"""
-
-    # Создать несколько товаров
-    product = Product(name='Product 1', description='Desc 1', price=10.0, stock=5, category_id=None)
-    product = Product(name='Product 2', description='Desc 2', price=10.0, stock=5, category_id=None)
-    product = Product(name='Product 3', description='Desc 3', price=10.0, stock=5, category_id=None)
-    product = Product(name='Product 4', description='Desc 4', price=10.0, stock=5, category_id=None)
-    db.session.add(product)
-    db.session.commit()
-    # Запросить первую страницу
-    response = client.get('/api/products?page=1&limit=10')
-    # Проверить что пришли правильные товары
-    assert response.status_code == 200
-    data = response.json
-    assert data['total'] == 1
-    assert data['products'][0]['name'] == 'Product 1'
-    # Проверить что pagination работает (total, pages, limit)
-    assert data['pages'] == 1
-    assert data['limit'] == 10
-
 def test_get_products_pagination(client, db):
     """Тест pagination для товаров"""
     # Создать несколько товаров
