@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.models import Product, Category, Order, OrderItem
 from app import db
+from app import math
 
 # Blueprint
 api = Blueprint('api', __name__, url_prefix='/api')
@@ -30,7 +31,6 @@ def get_products():
     products = Product.query.offset(offset).limit(limit).all()
     # Посчитать total и pages
     total = Product.query.count()
-    import math
     pages = math.ceil(total / limit)
     # Вернуть JSON
     return jsonify({
