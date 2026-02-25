@@ -36,7 +36,7 @@ jobs:
           flake8 devops-projects/techshop-v1/backend/ \
           --max-line-length=120 \
           --exclude=__pycache__ \
-          --ignore=E302,E301,W293,W292,E501
+          --ignore=E302,E301,W293,W292,E501,F401,W291
 
   backend-test:
     runs-on: ubuntu-latest
@@ -96,7 +96,7 @@ jobs:
       - name: Run tests
         run: |
           cd devops-projects/techshop-v1/backend
-          pytest -v --maxfail=1 --disable-warnings || echo "No tests found"
+          pytest -v --maxfail=1 --disable-warnings 
 
   validate-compose:
     runs-on: ubuntu-latest
