@@ -47,5 +47,5 @@ CREATE INDEX idx_order_items_order_id ON order_items (order_id);
 -- Добавление ограничений для обеспечения целостности данных
 ALTER TABLE products ADD CONSTRAINT chk_products_price CHECK (price >= 0);
 ALTER TABLE products ADD CONSTRAINT chk_products_stock CHECK (stock >= 0);
-ALTER TABLE orders ADD CONSTRAINT uq_users_email UNIQUE (user_email);
+ALTER TABLE orders ADD CONSTRAINT uq_users_email (user_email);
 ALTER TABLE orders ADD CONSTRAINT chk_orders_status CHECK (status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled'));
