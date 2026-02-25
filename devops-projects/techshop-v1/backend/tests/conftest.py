@@ -11,7 +11,7 @@ def app():
     os.environ['POSTGRES_USER'] = 'test'
     os.environ['POSTGRES_PASSWORD'] = 'test'
     os.environ['POSTGRES_HOST'] = 'localhost'
-    os.environ['POSTGRES_PORT'] = '5433'
+    os.environ['POSTGRES_PORT'] = '5432'
     os.environ['POSTGRES_DB'] = 'testdb'
     os.environ['SECRET_KEY'] = 'test-secret-key'
     
