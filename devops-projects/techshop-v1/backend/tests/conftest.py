@@ -6,17 +6,20 @@ from app.models import Category, Product
 @pytest.fixture(scope='session')
 def app():
     """Создаёт Flask приложение для тестов"""
-    # ✅ Установить ВСЕ необходимые переменные окружения
+    # Установить переменные окружения
     os.environ['TESTING'] = 'True'
     os.environ['POSTGRES_USER'] = 'test'
     os.environ['POSTGRES_PASSWORD'] = 'test'
     os.environ['POSTGRES_HOST'] = 'localhost'
-    os.environ['POSTGRES_PORT'] = '5432'
+    os.environ['POSTGRES_PORT'] = '5432'  # ✅ Исправлено с 5433 на 5432
     os.environ['POSTGRES_DB'] = 'testdb'
     os.environ['SECRET_KEY'] = 'test-secret-key'
     
     app = create_app()
     app.config['TESTING'] = True
+    
+    # ✅ ВАЖНО: Переопределить DATABASE_URI напрямую для тестов
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test:test@localhost:5432/testdb'
     
     return app
 
