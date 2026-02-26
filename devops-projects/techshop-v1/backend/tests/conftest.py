@@ -6,7 +6,6 @@ from app.models import Category, Product
 @pytest.fixture(scope='session')
 def app():
     """Создаёт Flask приложение для тестов"""
-    # ✅ Установить ВСЕ необходимые переменные окружения
     os.environ['TESTING'] = 'True'
     os.environ['POSTGRES_USER'] = 'test'
     os.environ['POSTGRES_PASSWORD'] = 'test'

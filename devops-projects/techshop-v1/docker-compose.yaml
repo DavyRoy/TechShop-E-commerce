@@ -7,7 +7,9 @@ services:
     ports:
       - "8081:80"
     depends_on:
-      - backend
+      backend:
+          condition: service_healthy
+
     restart: always
     networks:
       - techshop-network
@@ -18,10 +20,16 @@ services:
     container_name: techshop-backend
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:5000/api/health\")'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - "5010:5000"
     depends_on:
-      - postgres
+      postgres:
+          condition: service_healthy
     restart: always
     networks:
       - techshop-network
@@ -30,7 +38,7 @@ services:
     image: postgres:16-alpine
     container_name: techshop-postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sergey -d techshop"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -41,6 +49,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     networks:
       - techshop-network
