@@ -11,7 +11,6 @@
 
 [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [API](#-api-reference) • [Monitoring](#-monitoring)
 
-<img src="https://github.com/DavyRoy/TechShop-E-commerce/blob/main/devops-projects/techshop-v1/Снимок%20экрана%202026-02-18%20в%2020.46.32.png" alt="TechShop Demo" width="800"/>
 
 </div>
 
@@ -127,7 +126,7 @@ Monitoring Stack:
 | Component | Technology | Port | Purpose |
 |-----------|-----------|------|---------|
 | **Frontend** | Nginx Alpine | 8081 | Static files + Reverse proxy |
-| **Backend** | Flask + Gunicorn | 5000 | REST API with business logic |
+| **Backend** | Flask + Gunicorn | 5010 | REST API with business logic |
 | **Database** | PostgreSQL 16 | 5432 | Data persistence |
 | **Monitoring** | Prometheus | 9090 | Metrics collection |
 | **Visualization** | Grafana | 3000 | Dashboards and alerting |
@@ -229,7 +228,7 @@ docker-compose up -d
 
 # 5. Access the application
 # Frontend:   http://localhost:8081
-# Backend:    http://localhost:5000
+# Backend:    http://localhost:5010
 # Prometheus: http://localhost:9090
 # Grafana:    http://localhost:3000 (admin/admin)
 ```
@@ -251,7 +250,7 @@ docker-compose ps
 
 ### Base URL
 ```
-http://localhost:5000/api
+http://localhost:5010/api
 ```
 
 ### Endpoints Overview
@@ -448,7 +447,7 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # 3. Set environment variables
-export POSTGRES_USER=sergey
+export POSTGRES_USER=your_username
 export POSTGRES_PASSWORD=your_password
 export POSTGRES_DB=techshop
 export POSTGRES_HOST=localhost
