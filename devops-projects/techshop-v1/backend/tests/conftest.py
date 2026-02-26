@@ -17,6 +17,17 @@ from app.models import Category, Product
 @pytest.fixture(scope='session')
 def app():
     """Создаёт Flask приложение для тестов"""
+<<<<<<< HEAD
+=======
+    os.environ['TESTING'] = 'True'
+    os.environ['POSTGRES_USER'] = 'test'
+    os.environ['POSTGRES_PASSWORD'] = 'test'
+    os.environ['POSTGRES_HOST'] = 'localhost'
+    os.environ['POSTGRES_PORT'] = '5433'
+    os.environ['POSTGRES_DB'] = 'testdb'
+    os.environ['SECRET_KEY'] = 'test-secret-key'
+    
+>>>>>>> level-2-development
     app = create_app()
     app.config['TESTING'] = True
     
