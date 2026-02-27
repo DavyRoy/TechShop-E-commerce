@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.models import Product, Category, Order, OrderItem
 from app import db
+from app.cache import get_from_cache, set_to_cache, redis_client
 import math
 
 # Blueprint
@@ -23,23 +24,29 @@ def get_categories():
 
 @api.route('/products')
 def get_products():
-    # Получить параметры page и limit
     page = request.args.get('page', 1, type=int)
     limit = request.args.get('limit', 10, type=int)
     offset = (page - 1) * limit
-    # Сделать запрос с pagination
+    cache_key = f'products:all:page:{page}'
+
+    cached_data = get_from_cache(cache_key)
+    if cached_data:
+        return jsonify(cached_data)
+
     products = Product.query.offset(offset).limit(limit).all()
-    # Посчитать total и pages
     total = Product.query.count()
     pages = math.ceil(total / limit)
-    # Вернуть JSON
-    return jsonify({
+    
+    result = {
         'products': [product.to_dict() for product in products],
         'total': total,
         'pages': pages,
         'page': page,
         'limit': limit
-    })
+    }
+    
+    set_to_cache(cache_key, result, ttl=300)  # ← сначала
+    return jsonify(result)                     # ← потом
 
 @api.route('/products/<int:product_id>')
 def get_product(product_id):
@@ -118,3 +125,17 @@ def create_order():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+@api.route('/cache/stats', methods=['GET'])
+def cache_stats():
+    # redis_client.info() возвращает словарь с метриками Redis
+    # Нужные поля: keyspace_hits, keyspace_misses, used_memory_human
+    # redis_client.dbsize() — количество ключей
+    info = redis_client.info()
+    stats = {
+        'hits': info.get('keyspace_hits', 0),
+        'misses': info.get('keyspace_misses', 0),
+        'keys': redis_client.dbsize(),
+        'memory': info.get('used_memory_human', '0B')
+    }
+    return jsonify(stats)

@@ -6,4 +6,4 @@ Flask-CORS
 gunicorn
 prometheus-client
 prometheus-flask-exporter
-
+redis
