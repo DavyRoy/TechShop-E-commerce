@@ -8,3 +8,5 @@ data:
   LOG_LEVEL: "INFO"
   REDIS_HOST: "redis-svc"
   POSTGRES_HOST: "postgres-svc"
+  POSTGRES_PORT: "5432"
+  REDIS_PORT: "6379"
