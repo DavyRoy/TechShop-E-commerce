@@ -1,0 +1,28 @@
+# Replicas
+backend:
+  replicas: 2
+  image: techshop
+  tag: v4
+
+frontend:
+  replicas: 2
+  image: frontend
+  tag: v3
+
+postgres:
+  image: postgres
+  tag: 15
+  password: cG9zdGdyZXM=
+  user: cG9zdGdyZXM=
+  db: dGVjaHNob3BkYg=
+
+redis:
+  image: redis
+  tag: 7-alpine
+
+# Ingress
+ingress:
+  host: techshop.local
+
+# Namespace
+namespace: techshop
