@@ -20,10 +20,15 @@ spec:
             - containerPort: 5432
           
           # Переменные из Secret
-          data:
-            POSTGRES_USER: {{ .Values.postgres.user }}
-            POSTGRES_PASSWORD: {{ .Values.postgres.password }}
-            POSTGRES_DB: {{ .Values.postgres.db }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.user | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgres.password | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.db | quote }}
+            - name: POSTGRES_HOST
+              value: {{ .Values.postgres.host | quote }}
           
           # Ресурсы
           resources:

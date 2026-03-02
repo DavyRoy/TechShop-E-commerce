@@ -1,6 +1,5 @@
-# Replicas
 backend:
-  replicas: 2
+  replicas: 3
   image: techshop
   tag: v4
   env:
@@ -36,8 +35,9 @@ backend:
     successThreshold: 1
     failureThreshold: 3
 
+
 frontend:
-  replicas: 2
+  replicas: 3
   image: frontend
   tag: v3
   maxSurge: 1

@@ -11,8 +11,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+      maxSurge: {{ .Values.backend.maxSurge }}
+      maxUnavailable: {{ .Values.backend.maxUnavailable }}
   template:
     metadata:
       labels:
@@ -24,47 +24,37 @@ spec:
         imagePullPolicy: Never
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: {{ .Values.backend.resources.requests.memory }}
+            cpu: {{ .Values.backend.resources.requests.cpu }}
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: {{ .Values.backend.resources.limits.memory }}
+            cpu: {{ .Values.backend.resources.limits.cpu }}
         ports:
         - containerPort: 5000
-        envFrom:
-        - configMapRef:
-            name: techshop-config
         env:
           - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: techshop-secret    # имя нашего Secret
-                key: POSTGRES_USER
+            value: {{ .Values.postgres.user | quote }}
           - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: techshop-secret
-                key: POSTGRES_PASSWORD
+            value: {{ .Values.postgres.password | quote }}
           - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                name: techshop-secret
-                key: POSTGRES_DB
+            value: {{ .Values.postgres.db | quote }}
+          - name: POSTGRES_HOST
+            value: {{ .Values.backend.env.POSTGRES_HOST | quote }}
         readinessProbe:
           httpGet:
-            path: /api/health
-            port: 5000
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
+            path: {{ .Values.backend.readinessProbe.httpGet.path }}
+            port: {{ .Values.backend.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.backend.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.readinessProbe.failureThreshold }}
         livenessProbe:
           httpGet:
-            path: /api/health
-            port: 5000
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
+            path: {{ .Values.backend.livenessProbe.httpGet.path }}
+            port: {{ .Values.backend.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.backend.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold }}
