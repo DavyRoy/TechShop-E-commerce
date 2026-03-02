@@ -22,7 +22,7 @@ with app.app_context():
         Category(name='Monitors'),
     ]
     db.session.add_all(categories)
-    db.session.commit()
+    db.session.commit()  # ← сначала коммитим категории, потом продукты
 
     # Продукты
     products = [

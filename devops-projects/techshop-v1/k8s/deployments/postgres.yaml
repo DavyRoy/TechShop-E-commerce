@@ -55,6 +55,8 @@ spec:
                 - postgres
             initialDelaySeconds: 30
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
           
           # Readiness probe — убрать из балансировки если не готов
           readinessProbe:
@@ -65,6 +67,8 @@ spec:
                 - postgres
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 6
           
           # Подключение volume
           volumeMounts:
