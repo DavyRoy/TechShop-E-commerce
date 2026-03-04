@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zabbix-postgres-pvc
+  namespace: zabbix
+spec:
+  storageClassName: local-storage
+  volumeName: zabbix-postgres-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zabbix-agent-config
+  namespace: zabbix
+data:
+  zabbix_agentd.conf: |
+    Server=10.244.0.0/16
+    ServerActive=zabbix-server-svc
+    LogType=console
+    Include=/etc/zabbix/zabbix_agentd.d/*.conf
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: zabbix-agent
+  namespace: zabbix
+spec:
+  selector:
+    matchLabels:
+      app: zabbix-agent
+  template:
+    metadata:
+      labels:
+        app: zabbix-agent
+    spec:
+      containers:
+      - name: zabbix-agent
+        image: zabbix/zabbix-agent:alpine-6.4-latest
+        ports:
+        - containerPort: 10050
+        volumeMounts:
+        - name: config
+          mountPath: /etc/zabbix/zabbix_agentd.conf
+          subPath: zabbix_agentd.conf
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+      volumes:
+      - name: config
+        configMap:
+          name: zabbix-agent-config

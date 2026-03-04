@@ -1,0 +1,123 @@
+.
+├── techshop-v1
+│   ├── backend
+│   │   ├── Dockerfile
+│   │   ├── app
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-313.pyc
+│   │   │   │   ├── __init__.cpython-314.pyc
+│   │   │   │   ├── config.cpython-313.pyc
+│   │   │   │   └── models.cpython-313.pyc
+│   │   │   ├── cache.py
+│   │   │   ├── config.py
+│   │   │   ├── models.py
+│   │   │   ├── routes.py
+│   │   │   └── seed.py
+│   │   ├── pytest.ini
+│   │   ├── requirements-dev.txt
+│   │   ├── requirements.txt
+│   │   ├── tests
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-313.pyc
+│   │   │   │   ├── __init__.cpython-314.pyc
+│   │   │   │   ├── conftest.cpython-313-pytest-7.4.3.pyc
+│   │   │   │   ├── conftest.cpython-314-pytest-9.0.2.pyc
+│   │   │   │   ├── test_api.cpython-313-pytest-7.4.3.pyc
+│   │   │   │   ├── test_health.cpython-313-pytest-7.4.3.pyc
+│   │   │   │   └── test_models.cpython-313-pytest-7.4.3.pyc
+│   │   │   ├── conftest.py
+│   │   │   ├── test_api.py
+│   │   │   ├── test_health.py
+│   │   │   └── test_models.py
+│   │   └── wsgi.py
+│   ├── database
+│   │   ├── init.sql
+│   │   └── schema.sql
+│   ├── docker-compose.yaml
+│   ├── frontend
+│   │   ├── Dockerfile
+│   │   ├── nginx
+│   │   │   └── nginx.conf
+│   │   ├── scripts
+│   │   │   ├── build.sh
+│   │   │   └── run.sh
+│   │   └── src
+│   │       ├── about.html
+│   │       ├── api.js
+│   │       ├── catalog.html
+│   │       ├── images
+│   │       ├── index.html
+│   │       ├── main.js
+│   │       ├── order.html
+│   │       └── styles.css
+│   ├── helm
+│   │   └── techshop
+│   │       ├── Chart.yaml
+│   │       ├── templates
+│   │       │   ├── backend-deployment.yaml
+│   │       │   ├── backend-service.yaml
+│   │       │   ├── configmap.yaml
+│   │       │   ├── frontend-deployment.yaml
+│   │       │   ├── frontend-service.yaml
+│   │       │   ├── ingress.yaml
+│   │       │   ├── namespace.yaml
+│   │       │   ├── postgres-deployment.yaml
+│   │       │   ├── postgres-pv.yaml
+│   │       │   ├── postgres-pvc.yaml
+│   │       │   ├── postgres-service.yaml
+│   │       │   ├── redis-deployment.yaml
+│   │       │   └── redis-service.yaml
+│   │       ├── values-dev.yaml
+│   │       ├── values-prod.yaml
+│   │       └── values.yaml
+│   ├── k8s
+│   │   ├── configmaps
+│   │   │   └── app-config.yaml
+│   │   ├── deployments
+│   │   │   ├── backend.yaml
+│   │   │   ├── frontend.yaml
+│   │   │   ├── postgres.yaml
+│   │   │   └── redis.yaml
+│   │   ├── ingress
+│   │   │   └── techshop-ingress.yaml
+│   │   ├── monitoring
+│   │   │   └── zabbix
+│   │   │       └── zabbix-postgres.yaml
+│   │   ├── namespaces
+│   │   │   └── techshop.yaml
+│   │   ├── persistent-volumes
+│   │   │   ├── postgres-pv.yaml
+│   │   │   └── postgres-pvc.yaml
+│   │   ├── secrets
+│   │   │   ├── db-secrets.example.yaml
+│   │   │   └── db-secrets.yaml
+│   │   └── services
+│   │       ├── backend-svc.yaml
+│   │       ├── frontend-svc.yaml
+│   │       ├── postgres-svc.yaml
+│   │       └── redis-svc.yaml
+│   ├── monitoring
+│   │   ├── grafana
+│   │   │   └── provisioning
+│   │   │       ├── dashboards
+│   │   │       │   ├── dashboard.yml
+│   │   │       │   └── techshop-dashboard.json
+│   │   │       └── datasources
+│   │   │           └── prometheus.yml
+│   │   └── prometheus
+│   │       └── prometheus.yml
+│   ├── scripts
+│   │   ├── README.md
+│   │   ├── backup.sh
+│   │   ├── cleanup.sh
+│   │   ├── deploy.sh
+│   │   ├── health-check.sh
+│   │   ├── logs.sh
+│   │   ├── setup.sh
+│   │   └── test.sh
+│   └── techshop-3.0.0.tgz
+└── techshop.txt
+
+33 directories, 88 files

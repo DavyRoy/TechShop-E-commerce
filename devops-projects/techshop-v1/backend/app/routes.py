@@ -24,7 +24,7 @@ def get_products():
 
     cached = get_from_cache(cache_key)
     if cached:
-        return jsonify({'source': 'cache', 'data': cached})
+        return jsonify(cached)
 
     products = Product.query.offset(offset).limit(limit).all()
     total = Product.query.count()
@@ -39,7 +39,7 @@ def get_products():
     }
 
     set_to_cache(cache_key, result, ttl=300)
-    return jsonify({'source': 'database', 'data': result})
+    return jsonify(result)
 
 @api.route('/products/<int:product_id>')
 def get_product(product_id):
