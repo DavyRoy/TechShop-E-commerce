@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: techshop-micro-config
+  namespace: techshop-micro
+data:
+  MONGODB_URI: mongodb://mongo:27017
+  MONGODB_DB: techshop
+  PRODUCT_SERVICE_URL: http://product-service:8080
+  ORDER_SERVICE_URL: http://order-service:5030
+  USER_SERVICE_URL: http://user-service:5020
+  POSTGRES_USER: postgres
+  POSTGRES_PORT: "5432"
+  KAFKA_BROKER: kafka-broker:9092
+

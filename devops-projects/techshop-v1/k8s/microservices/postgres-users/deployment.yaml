@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techshop-micro-deployment-postgres-users
+  namespace: techshop-micro
+  labels:
+    app: postgres-users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-users
+  template:
+    metadata:
+      labels:
+        app: postgres-users
+    spec:
+      containers:
+      - name: postgres-users
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: techshop-micro-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: POSTGRES_USER
+        - name: POSTGRES_DB
+          value: techshop
