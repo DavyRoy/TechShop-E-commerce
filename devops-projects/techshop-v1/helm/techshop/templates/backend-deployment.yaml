@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: {{.Values.namespace}}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{ .Values.backend.maxSurge }}
+      maxUnavailable: {{ .Values.backend.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-techshop
+        image: {{ .Values.backend.image }}:{{ .Values.backend.tag }}
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: {{ .Values.backend.resources.requests.memory }}
+            cpu: {{ .Values.backend.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.backend.resources.limits.memory }}
+            cpu: {{ .Values.backend.resources.limits.cpu }}
+        ports:
+        - containerPort: 5000
+        env:
+          - name: POSTGRES_USER
+            value: {{ .Values.postgres.user | quote }}
+          - name: POSTGRES_PASSWORD
+            value: {{ .Values.postgres.password | quote }}
+          - name: POSTGRES_DB
+            value: {{ .Values.postgres.db | quote }}
+          - name: POSTGRES_HOST
+            value: {{ .Values.backend.env.POSTGRES_HOST | quote }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.backend.readinessProbe.httpGet.path }}
+            port: {{ .Values.backend.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.backend.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.readinessProbe.failureThreshold }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.backend.livenessProbe.httpGet.path }}
+            port: {{ .Values.backend.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.backend.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold }}

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: techshop
+description: TechShop e-commerce application
+type: application
+version: 3.0.0
+appVersion: "3.0.0"
+maintainers:
+  - name: techshop-dev
+    email: techshop-dev@example.com

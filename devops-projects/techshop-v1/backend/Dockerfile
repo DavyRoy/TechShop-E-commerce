@@ -8,6 +8,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ /app/app/
 COPY wsgi.py /app/
+COPY tests/ /app/tests/
 RUN groupadd -r myuser && useradd -r -g myuser -u 1000 -m myuser
 RUN chown -R myuser:myuser /app
 USER myuser

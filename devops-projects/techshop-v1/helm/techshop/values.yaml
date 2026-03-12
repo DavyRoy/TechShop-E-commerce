@@ -1,0 +1,87 @@
+# Replicas
+backend:
+  replicas: 2
+  image: techshop
+  tag: v4
+  env:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_DB: techshopdb
+    POSTGRES_HOST: postgres-svc
+  maxSurge: 1
+  maxUnavailable: 0
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  readinessProbe:
+    httpGet:
+      path: /api/health
+      port: 5000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: 5000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+
+frontend:
+  replicas: 2
+  image: frontend
+  tag: v3
+  maxSurge: 1
+  maxUnavailable: 0
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 80
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 80
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+
+postgres:
+  image: postgres
+  tag: 15
+  user: postgres
+  password: postgres
+  db: techshopdb
+
+redis:
+  image: redis
+  tag: 7-alpine
+
+# Ingress
+ingress:
+  host: techshop.local
+
+# Namespace
+namespace: techshop

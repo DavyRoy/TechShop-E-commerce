@@ -36,3 +36,8 @@ htmlcov/
 backend/.pytest_cache/
 backend/htmlcov/
 backend/.coverage
+k8s/secrets/*.yaml
+k8s/secrets/*.yml
+k8s/configmaps/*.yaml
+k8s/configmaps/*.yml
+!k8s/secrets/*.example.yaml

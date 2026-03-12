@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{ .Values.frontend.maxSurge }}
+      maxUnavailable: {{ .Values.frontend.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-techshop
+        image: {{ .Values.frontend.image }}:{{ .Values.frontend.tag }}
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: {{ .Values.frontend.resources.requests.memory }}
+            cpu: {{ .Values.frontend.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.frontend.resources.limits.memory }}
+            cpu: {{ .Values.frontend.resources.limits.cpu }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.frontend.readinessProbe.httpGet.path }}
+            port: {{ .Values.frontend.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.frontend.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.frontend.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.frontend.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.frontend.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.frontend.readinessProbe.failureThreshold }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.frontend.livenessProbe.httpGet.path }}
+            port: {{ .Values.frontend.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.frontend.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.frontend.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.frontend.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.frontend.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.frontend.livenessProbe.failureThreshold }}

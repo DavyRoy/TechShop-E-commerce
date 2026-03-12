@@ -1,0 +1,84 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
+  FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
+
+build_backend:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - docker info
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA ./techshop-v1/backend
+    - docker build -t $CI_REGISTRY_IMAGE/backend:latest ./techshop-v1/backend
+    - docker push $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE/backend:latest
+  only:
+    - main
+
+build_frontend:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - docker info
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA ./techshop-v1/frontend
+    - docker build -t $CI_REGISTRY_IMAGE/frontend:latest ./techshop-v1/frontend
+    - docker push $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE/frontend:latest
+  only:
+    - main
+
+test_backend:
+  stage: test
+  image: python:3.11-slim
+  services:
+    - name: postgres:13
+      alias: localhost
+  variables:
+    POSTGRES_DB: testdb
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: test
+  before_script:
+    - cd techshop-v1/backend
+    - pip install --no-cache-dir -r requirements.txt
+    - pip install --no-cache-dir pytest pytest-cov
+  script:
+    - pytest tests/ -v
+    - pytest --cov=app
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  tags:
+    - devops
+  before_script:
+    - mkdir -p $HOME/.kube
+    - echo "$KUBE_CONFIG" | base64 -d > $HOME/.kube/config
+    - chmod 600 $HOME/.kube/config
+    - kubectl config get-contexts
+    - kubectl cluster-info
+  script:
+    - kubectl set image deployment/backend backend-techshop=$CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA -n techshop
+    - kubectl set image deployment/frontend frontend-techshop=$CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA -n techshop
+    - kubectl rollout status deployment/backend -n techshop
+    - kubectl rollout status deployment/frontend -n techshop
+  only:
+    - main

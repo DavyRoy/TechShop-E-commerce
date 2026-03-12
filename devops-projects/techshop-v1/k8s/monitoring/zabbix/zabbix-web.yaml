@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zabbix-web
+  namespace: zabbix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zabbix-web
+  template:
+    metadata:
+      labels:
+        app: zabbix-web
+    spec:
+      containers:
+      - name: zabbix-web
+        image: zabbix/zabbix-web-nginx-pgsql:alpine-6.4-latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_SERVER_HOST
+          value: "zabbix-postgres-svc"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: zabbix-postgres-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zabbix-postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: zabbix-postgres-secret
+              key: POSTGRES_DB
+        - name: ZBX_SERVER_HOST
+          value: "zabbix-server-svc"
+        - name: ZBX_SERVER_PORT
+          value: "10051"
+        - name: PHP_TZ
+          value: "Europe/Moscow"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1000Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
