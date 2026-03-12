@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: techshop-micro-deployment-product
+  namespace: techshop-micro
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: techshop-micro-product
+  template:
+    metadata:
+      labels:
+        app: techshop-micro-product
+    spec:
+      containers:
+      - name: techshop-micro-product
+        image: services-product-service:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: MONGODB_URI
+        - name: MONGODB_DB
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: MONGODB_DB
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+        

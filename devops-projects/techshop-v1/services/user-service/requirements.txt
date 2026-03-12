@@ -1,0 +1,7 @@
+ Flask
+ Flask-SQLAlchemy
+ PyJWT
+ bcrypt
+ marshmallow
+ psycopg2-binary
+ python-dotenv

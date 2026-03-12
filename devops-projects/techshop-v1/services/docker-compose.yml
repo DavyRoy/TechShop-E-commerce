@@ -1,0 +1,152 @@
+services:
+  mongo:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: techshop
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/mongo/db
+
+  postgres-users:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: techshop
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./postgresql-users-data:/var/lib/postgres/data
+
+  postgres-orders:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: techshopdb
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./postgresql-orders-data:/var/lib/postgresql/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVER_ID: 1
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service-techshop
+    environment:
+      - MONGODB_URI=mongodb://root:root@mongo:27017/
+      - MONGODB_DB=techshop
+      - SERVER_PORT=8080
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mongo
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service-techshop
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=techshop_users
+      - POSTGRES_HOST=postgres-users
+      - POSTGRES_PORT=5432
+      - JWT_SECRET_KEY=secret
+      - SERVER_PORT=5020
+    ports:
+      - "5023:5020"
+    depends_on:
+      - postgres-users
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service-techshop
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=techshop_orders
+      - POSTGRES_HOST=postgres-orders
+      - POSTGRES_PORT=5432
+      - KAFKA_BROKER=kafka:9092
+      - SERVER_PORT=5030
+    ports:
+      - "5033:5030"
+    depends_on:
+      - postgres-orders
+      - kafka
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service-techshop
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - SERVER_PORT=5040
+    ports:
+      - "5043:5040"
+    depends_on:
+      - kafka
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway-techshop
+    environment:
+      - PRODUCT_SERVICE_URL=http://product-service:8080
+      - ORDER_SERVICE_URL=http://order-service:5030
+      - USER_SERVICE_URL=http://user-service:5020
+      - JWT_SECRET=secret
+      - SERVER_PORT=8020
+    ports:
+      - "8022:8020"
+    depends_on:
+      - product-service
+      - user-service
+      - order-service
+      - notification-service
+
+networks:
+  default:
+    name: techshop-network-micro
+
+volumes:
+  mongo-data:
+  postgres-users-data:
+  postgres-orders-data:
+
+  

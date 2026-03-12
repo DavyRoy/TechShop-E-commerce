@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: techshop-micro-deployment-notification
+  namespace: techshop-micro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: techshop-micro-notification
+  template:
+    metadata:
+      labels:
+        app: techshop-micro-notification
+    spec:
+      containers:
+      - name: techshop-micro-notification
+        image: services-notification-service:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        env:
+        - name: KAFKA_BROKER
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: KAFKA_BROKER

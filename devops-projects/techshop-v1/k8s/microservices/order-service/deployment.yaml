@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: techshop-micro-deployment-order
+  namespace: techshop-micro
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: techshop-micro-order
+  template:
+    metadata:
+      labels:
+        app: techshop-micro-order
+    spec:
+      containers:
+      - name: techshop-micro-order
+        image: services-order-service:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 5030
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: techshop-micro-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          value: techshop_order
+        - name: POSTGRES_HOST
+          value: postgres-order
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: POSTGRES_PORT
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: techshop-micro-secret
+              key: JWT_SECRET_KEY
+        - name: KAFKA_BROKER
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: KAFKA_BROKER
+        - name: PRODUCT_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: techshop-micro-config
+              key: PRODUCT_SERVICE_URL
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5030
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5030
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+        

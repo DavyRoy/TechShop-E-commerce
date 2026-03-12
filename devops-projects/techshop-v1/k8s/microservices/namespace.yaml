@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: techshop-micro
+  labels:
+    app: techshop-micro
+    env: techshop-dev
