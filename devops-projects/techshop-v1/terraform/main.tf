@@ -72,3 +72,31 @@ resource "kubernetes_network_policy" "techshop_micro_service" {
     policy_types = ["Ingress"]
   }
 }
+
+module "mongodb" {
+  source    = "./modules/databases/mongodb"
+  namespace = kubernetes_namespace.techshop_micro_service.metadata[0].name
+  name      = "mongo"
+  db_name   = "techshop"
+}
+
+module "postgres_users" {
+  source      = "./modules/databases/postgresql"
+  namespace   = kubernetes_namespace.techshop_micro_service.metadata[0].name
+  name        = "postgres-users"
+  db_name     = "techshop_users"
+  db_password = "postgres"
+}
+
+module "postgres_orders" {
+  source      = "./modules/databases/postgresql"
+  namespace   = kubernetes_namespace.techshop_micro_service.metadata[0].name
+  name        = "postgres-orders"
+  db_name     = "techshop_orders"
+  db_password = "postgres"
+}
+
+module "kafka" {
+  source    = "./modules/kafka"
+  namespace = kubernetes_namespace.techshop_micro_service.metadata[0].name
+}
