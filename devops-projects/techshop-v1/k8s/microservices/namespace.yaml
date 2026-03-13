@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: techshop-micro
+  name: techshop-micro-service
   labels:
     app: techshop-micro
     env: techshop-dev

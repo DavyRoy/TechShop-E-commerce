@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kafka-deployment
-  namespace: techshop-micro
+  namespace: techshop-micro-service
   labels:
     app: kafka-broker
 spec:

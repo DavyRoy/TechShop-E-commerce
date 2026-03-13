@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: zookeeper
-  namespace: techshop-micro
+  namespace: techshop-micro-service
 spec:
   serviceName: zookeeper-svc
   replicas: 3

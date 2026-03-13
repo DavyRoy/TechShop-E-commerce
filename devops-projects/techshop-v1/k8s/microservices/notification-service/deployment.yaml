@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment 
 metadata:
   name: techshop-micro-deployment-notification
-  namespace: techshop-micro
+  namespace: techshop-micro-service
 spec:
   replicas: 1
   selector:
@@ -26,7 +26,4 @@ spec:
             cpu: "200m"
         env:
         - name: KAFKA_BROKER
-          valueFrom:
-            configMapKeyRef:
-              name: techshop-micro-config
-              key: KAFKA_BROKER
+          value: kafka-broker:9092

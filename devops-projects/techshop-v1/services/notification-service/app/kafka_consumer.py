@@ -32,18 +32,20 @@ def handle_message(message):
                 time.sleep(1)
 
 def start_consumer():
-    try:
-        from kafka import KafkaConsumer
-        consumer = KafkaConsumer(
-            'order.created', 'order.updated', 'order.cancelled',
-            bootstrap_servers=[KAFKA_BROKER],
-            group_id=CONSUMER_GROUP,
-            value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-            auto_offset_reset='earliest'
-        )
-    except Exception as e:
-        print(f"Kafka unavailable: {e}")
-        return
+    while True:
+        try:
+            from kafka import KafkaConsumer
+            consumer = KafkaConsumer(
+                'order.created', 'order.updated', 'order.cancelled',
+                bootstrap_servers=[KAFKA_BROKER],
+                group_id=CONSUMER_GROUP,
+                value_deserializer=lambda m: json.loads(m.decode('utf-8')),
+                auto_offset_reset='earliest'
+            )
+            break
+        except Exception as e:
+            print(f"Kafka unavailable: {e}, retrying in 5s...")
+            time.sleep(5)
 
     def shutdown(sig, frame):
         print("Shutting down gracefully...")
