@@ -1,0 +1,8 @@
+all:
+  children:
+    kubernetes:
+      hosts:
+        localhost:
+          ansible_connection: local
+          ansible_host: localhost
+          kubeconfig: ~/.kube/config

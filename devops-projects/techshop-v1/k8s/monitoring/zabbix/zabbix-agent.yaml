@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: zabbix-agent-config
-  namespace: zabbix
+  namespace: monitoring
 data:
   zabbix_agentd.conf: |
     Server=10.244.0.0/16

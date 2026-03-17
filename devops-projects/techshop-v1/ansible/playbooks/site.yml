@@ -1,0 +1,20 @@
+---
+- name: Configure k8s-config
+  hosts: localhost
+  roles:
+    - k8s-config
+
+- name: Configure MongoDB
+  hosts: localhost
+  roles:
+    - mongodb
+
+- name: Configure Kafka
+  hosts: localhost
+  roles:
+    - kafka
+
+- name: Configure services
+  hosts: localhost
+  roles:
+    - services

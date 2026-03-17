@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-node
+  namespace: monitoring
+
+data:
+  node-dashboard.json: |
+    {
+      "title": "Infrastructure Overview",
+      "panels": [
+        {
+          "type": "graph",
+          "title": "CPU Usage",
+          "targets": [
+            {
+              "expr": "rate(node_cpu_seconds_total[5m])",
+              "refId": "A"
+            }
+          ]
+        }
+      ]
+    }

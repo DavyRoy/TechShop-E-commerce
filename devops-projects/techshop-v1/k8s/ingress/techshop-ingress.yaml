@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: techshop-ingress
   namespace: techshop
+  annotations:
+    nginx.ingress.kubernetes.io/limit-rps: "10"
 spec:
   ingressClassName: nginx
   rules:
@@ -23,3 +25,4 @@ spec:
             name: backend-svc
             port:
               number: 5000
+      

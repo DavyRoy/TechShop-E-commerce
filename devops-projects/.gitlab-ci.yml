@@ -1,6 +1,8 @@
 stages:
   - build
   - test
+  - lint
+  - security
   - deploy
 
 variables:
@@ -25,6 +27,7 @@ build_backend:
     - docker push $CI_REGISTRY_IMAGE/backend:latest
   only:
     - main
+    - /^level-.*$/
 
 build_frontend:
   stage: build
@@ -44,17 +47,28 @@ build_frontend:
     - docker push $CI_REGISTRY_IMAGE/frontend:latest
   only:
     - main
+    - /^level-.*$/
 
 test_backend:
   stage: test
   image: python:3.11-slim
   services:
-    - name: postgres:13
-      alias: localhost
+    - name: postgres:15
+      alias: postgres
+    - name: redis:7
+      alias: redis
   variables:
     POSTGRES_DB: testdb
     POSTGRES_USER: test
     POSTGRES_PASSWORD: test
+    REDIS_HOST: localhost
+    REDIS_PORT: 6379
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    expire_in: 1 week
   before_script:
     - cd techshop-v1/backend
     - pip install --no-cache-dir -r requirements.txt
@@ -62,8 +76,40 @@ test_backend:
   script:
     - pytest tests/ -v
     - pytest --cov=app
+  needs:
+    - build_backend
   only:
     - main
+    - /^level-.*$/
+
+lint_backend:
+  stage: lint
+  image: python:3.11-slim
+  before_script:
+    - cd techshop-v1/backend
+    - pip install flake8 black
+  script:
+    - flake8 app/
+    - black --check app/
+  only:
+    - main
+    - /^level-.*$/
+
+security_backend:
+  stage: security
+  image: python:3.11-slim
+  before_script:
+    - cd techshop-v1/backend
+    - pip install bandit safety
+    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+  script:
+    - bandit -r app/
+    - safety check -r requirements.txt
+    - trivy app/
+  only:
+    - main
+    - /^level-.*$/
+
 
 deploy:
   stage: deploy
@@ -82,3 +128,46 @@ deploy:
     - kubectl rollout status deployment/frontend -n techshop
   only:
     - main
+    - /^level-.*$/
+
+deploy-dev:
+  stage: deploy
+  tags:
+    - devops
+  before_script:
+    - mkdir -p $HOME/.kube
+    - echo "$KUBE_CONFIG_DEV" | base64 -d > $HOME/.kube/config
+    - chmod 600 $HOME/.kube/config
+    - kubectl config get-contexts
+    - kubectl cluster-info
+  script:
+    - helm upgrade --install techshop ./helm/techshop 
+      -f helm/techshop/values-dev.yaml
+      --set backend.tag=$CI_COMMIT_SHORT_SHA
+      --atomic --timeout 5m
+      -n techshop-dev
+  only:
+    - main
+    - /^level-.*$/
+
+deploy-prod:
+  stage: deploy
+  tags:
+    - devops
+  before_script:
+    - mkdir -p $HOME/.kube
+    - echo "$KUBE_CONFIG_PROD" | base64 -d > $HOME/.kube/config
+    - chmod 600 $HOME/.kube/config
+    - kubectl config get-contexts
+    - kubectl cluster-info
+  script:
+    - helm upgrade --install techshop ./helm/techshop
+        -f helm/techshop/values-prod.yaml
+        --set backend.tag=$CI_COMMIT_SHORT_SHA
+        --atomic --timeout 5m
+        -n techshop-prod
+  when: manual
+  only:
+    - main
+    - /^level-.*$/
+

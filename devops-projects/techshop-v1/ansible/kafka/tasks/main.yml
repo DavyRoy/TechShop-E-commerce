@@ -1,0 +1,32 @@
+---
+- name: Получить имя Kafka пода
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: techshop-micro-service
+    label_selectors:
+      - app=kafka-broker
+  register: kafka_pod
+
+- name: Kafka topic order.created
+  kubernetes.core.k8s_exec:
+    namespace: techshop-micro-service
+    pod: "{{ kafka_pod.resources[0].metadata.name }}"
+    command: kafka-topics.sh --create --topic order.created --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+- name: Kafka topic order.updated
+  kubernetes.core.k8s_exec:
+    namespace: techshop-micro-service
+    pod: "{{ kafka_pod.resources[0].metadata.name }}"
+    command: kafka-topics.sh --create --topic order.updated --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+- name: Kafka topic order.cancelled
+  kubernetes.core.k8s_exec:
+    namespace: techshop-micro-service
+    pod: "{{ kafka_pod.resources[0].metadata.name }}"
+    command: kafka-topics.sh --create --topic order.cancelled --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+- name: Kafka topic user.registered
+  kubernetes.core.k8s_exec:
+    namespace: techshop-micro-service
+    pod: "{{ kafka_pod.resources[0].metadata.name }}"
+    command: kafka-topics.sh --create --topic user.registered --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1

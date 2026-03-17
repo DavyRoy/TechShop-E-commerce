@@ -1,0 +1,14 @@
+---
+- name: Проверка доступности кластера
+  kubernetes.core.k8s_info:
+    kind: Node
+  register: nodes
+
+- name: Проверка namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: techshop-micro

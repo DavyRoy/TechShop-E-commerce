@@ -1,0 +1,40 @@
+---
+- name: Проверка api-gateway
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: techshop-micro-service
+    name: api-gateway
+  register: api_gateway
+  failed_when: api_gateway.resources[0].status.readyReplicas == 0
+
+- name: Проверка user-service
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: techshop-micro-service
+    name: user-service
+  register: user_service
+  failed_when: user_service.resources[0].status.readyReplicas == 0
+
+- name: Проверка order-service
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: techshop-micro-service
+    name: order-service
+  register: order_service
+  failed_when: order_service.resources[0].status.readyReplicas == 0
+
+- name: Проверка product-service
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: techshop-micro-service
+    name: product-service
+  register: product_service
+  failed_when: product_service.resources[0].status.readyReplicas == 0
+
+- name: Проверка notification-service
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: techshop-micro-service
+    name: notification-service
+  register: notification_service
+  failed_when: notification_service.resources[0].status.readyReplicas == 0

@@ -11,11 +11,11 @@ backend:
   maxUnavailable: 0
   resources:
     requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
       memory: 256Mi
       cpu: 250m
-    limits:
-      memory: 512Mi
-      cpu: 500m
   readinessProbe:
     httpGet:
       path: /api/health
@@ -44,11 +44,11 @@ frontend:
   maxUnavailable: 0
   resources:
     requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
       memory: 256Mi
       cpu: 250m
-    limits:
-      memory: 512Mi
-      cpu: 500m
   readinessProbe:
     httpGet:
       path: /health
@@ -67,6 +67,11 @@ frontend:
     timeoutSeconds: 2
     successThreshold: 1
     failureThreshold: 3
+  log_level: debug
+  log_format: json
+  log_max_size: 100
+  log_max_backups: 3
+  log_max_age: 7
 
 postgres:
   image: postgres
